@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 
 // setup json parsing and access to req.body
 app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
+//app.use(express.urlencoded({ extended: true }));
 
 // setup your api routes
 const homeRoute = require('./routes/home');
@@ -23,16 +23,14 @@ const usersRoute = require('./routes/users');
 const coursesRoute = require('./routes/courses');
 
 app.use('/api', homeRoute);
-app.use('/api/users', usersRoute);
-app.use('/api/courses', coursesRoute);
+app.use('/api', usersRoute);
+app.use('/api', coursesRoute);
 
-// setup a friendly greeting for the root route
-// app.get('/', (req, res) => {
-//   res.json({
-//     message: 'Welcome to the REST API project!',
-//   });
-// });
-//console.log('hi');
+// REDIRECT TO BOOKS ROUTE
+app.get("/", function(req, res, next) {
+  res.redirect("/api");
+});
+
 // send 404 if no other route matched
 app.use((req, res) => {
   res.status(404).json({
