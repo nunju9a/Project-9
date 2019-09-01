@@ -13,15 +13,26 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
-// TODO setup your api routes here
+// setup json parsing and access to req.body
+app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+
+// setup your api routes
+const homeRoute = require('./routes/home');
+const usersRoute = require('./routes/users');
+const coursesRoute = require('./routes/courses');
+
+app.use('/api', homeRoute);
+app.use('/api/users', usersRoute);
+app.use('/api/courses', coursesRoute);
 
 // setup a friendly greeting for the root route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to the REST API project!',
-  });
-});
-
+// app.get('/', (req, res) => {
+//   res.json({
+//     message: 'Welcome to the REST API project!',
+//   });
+// });
+//console.log('hi');
 // send 404 if no other route matched
 app.use((req, res) => {
   res.status(404).json({
@@ -48,3 +59,5 @@ app.set('port', process.env.PORT || 5000);
 const server = app.listen(app.get('port'), () => {
   console.log(`Express server is listening on port ${server.address().port}`);
 });
+
+
