@@ -17,7 +17,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 //app.use(express.urlencoded({ extended: true }));
 
-// setup your api routes
+// setup api routes
 const homeRoute = require('./routes/home');
 const usersRoute = require('./routes/users');
 const coursesRoute = require('./routes/courses');

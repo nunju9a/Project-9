@@ -1,7 +1,6 @@
 const express = require('express');
 // Construct a router instance.
 const router = express.Router();
-const Sequelize = require("sequelize");
 const User = require("../models").User;
 const bcryptjs = require('bcryptjs');
 const auth = require('basic-auth');
@@ -76,6 +75,7 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
     const user = await User.findByPk(
       req.body.id,
       {
+        // Exclude private or unecessary info
         attributes: {
           exclude: ['password', 'createdAt', 'updatedAt'],
         },
@@ -91,8 +91,8 @@ router.post('/users', asyncHandler(async (req, res) => {
     if(req.body.password) {
       //Hash the password and then attempt to create a new user
       req.body.password = await bcryptjs.hashSync(req.body.password);
-      //this trigger model validations for User model
       // Model validations for User model
+      const newUser = await User.create(req.body);
     } else {
       // Model validations for User model
       const newUser = await User.create(req.body);
@@ -102,5 +102,4 @@ router.post('/users', asyncHandler(async (req, res) => {
     res.status(201).end();
   })
 );
- 
   module.exports = router;
