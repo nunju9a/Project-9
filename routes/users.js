@@ -92,10 +92,10 @@ router.post('/users', asyncHandler(async (req, res) => {
       //Hash the password and then attempt to create a new user
       req.body.password = await bcryptjs.hashSync(req.body.password);
       // Model validations for User model
-      const newUser = await User.create(req.body);
+      await User.create(req.body);
     } else {
       // Model validations for User model
-      const newUser = await User.create(req.body);
+      await User.create(req.body);
     }
     // Set response location and status to 201 if successful
     res.location('/');
