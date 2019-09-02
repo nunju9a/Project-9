@@ -70,7 +70,7 @@ const authenticateUser = async (req, res, next) => {
   }
 }
 
-//'GET/api/users 200' - // Route that returns the current authenticated user.
+//GET/api/users 200 -  Returns the currently authenticated user
 router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
     const user = await User.findByPk(
       req.body.id,
@@ -85,7 +85,7 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
   })
 );
 
-//'POST/api/users 201' - Creates user
+//POST/api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 router.post('/users', asyncHandler(async (req, res) => {
     //If there is a password
     if(req.body.password) {

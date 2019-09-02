@@ -71,7 +71,7 @@ const authenticateUser = async (req, res, next) => {
   }
 }
 
-//'GET/api/courses 200' - Returns a list of courses (including the user that owns each course)
+//GET/api/courses 200 - Returns a list of courses (including the user that owns each course)
 router.get('/courses', asyncHandler(async (req, res) => {
   const courses = await Course.findAll({
     // Exclude private or unecessary info
@@ -117,7 +117,7 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
 })
 );
 
-//'POST/api/courses 201' -  Creates a course, sets the Location header to the URI for the course, 
+//POST/api/courses 201 -  Creates a course, sets the Location header to the URI for the course, 
                           //and returns no content
 router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
   // Model validations for User model
@@ -127,7 +127,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
 })
 );
 
-//'PUT/api/courses/:id 204' - Updates a course and returns no content
+//PUT/api/courses/:id 204 - Updates a course and returns no content
 router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   let course = await Course.findByPk(req.params.id);
   // Checking if the user is the owner of the course
@@ -148,7 +148,7 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next)
 })
 );
 
-//'DELETE/api/courses/:id 204' - Deletes a course and returns no content
+//DELETE/api/courses/:id 204 - Deletes a course and returns no content
 router.delete('/courses/:id', authenticateUser, asyncHandler(async (req, res, next) => {
   const course = await Course.findByPk(req.params.id);
   // Delete course only if user is the owner
