@@ -68,7 +68,7 @@ sequelize
   .then(() => {
     // Listen on port after database has been synced
     const server = app.listen(app.get('port'), () => {
-      console.log(`Express server is listening on port ${server.address().port}`);
+      console.log(`Successfully running on port ${server.address().port}!`);
     });
   }) // Catch error if database did not sync
   .catch(err => console.log('Connection failed - unable to connect to the database'));

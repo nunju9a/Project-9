@@ -73,7 +73,7 @@ const authenticateUser = async (req, res, next) => {
 
 //GET/api/courses 200 - Returns a list of courses (including the user that owns each course)
 router.get('/courses', asyncHandler(async (req, res) => {
-  const courses = await Course.findAll({
+  const allCourses = await Course.findAll({
     // Exclude private or unecessary info
     attributes: {
       exclude: ['createdAt', 'updatedAt'],
@@ -88,7 +88,7 @@ router.get('/courses', asyncHandler(async (req, res) => {
       },
     ],
   });
-  res.json(courses);
+  res.json(allCourses);
 })
 );
 
@@ -119,10 +119,10 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
 
 //POST/api/courses 201 -  Creates a course, sets the Location header to the URI for the course, 
                           //and returns no content
-router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
+router.post('/courses', asyncHandler(async (req, res) => {
   // Model validations for User model
-  const newCourse = await Course.create(req.body);
-  res.location(`/api/courses/${newCourse.id}`);
+  const createCourse = await Course.create(req.body);
+  res.location(`/api/courses/${createCourse.id}`);
   res.status(201).end();
 })
 );
@@ -137,11 +137,11 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next)
     course.estimatedTime = req.body.estimatedTime;
     course.materialsNeeded = req.body.materialsNeeded;
     //Course model validations 
-    course = await course.save();
+    course = await course.update(req.body);
     res.status(204).end();
   } else {
     // Forbidden from updated course
-    const err = new Error('Forbidden');
+    const err = new Error(`Forbidden - You don't have permission to do this`);
     err.status = 403;
     next(err);
   }
@@ -157,7 +157,7 @@ router.delete('/courses/:id', authenticateUser, asyncHandler(async (req, res, ne
     res.status(204).end();
   } else {
     //Forbidden from updated course
-    const err = new Error('Forbidden');
+    const err = new Error(`Forbidden - You don't have permission to do this`);
     err.status = 403;
     next(err);
   }
