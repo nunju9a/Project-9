@@ -62,7 +62,7 @@ const authenticateUser = async (req, res, next) => {
   if(message) {
     console.warn(message);
     const err = new Error('Access Denied');
-    err.status = 401;
+    err.status = 403;
     next(err);
   } else {
     //User authenticated
