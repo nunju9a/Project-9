@@ -63,7 +63,7 @@ const authenticateUser = async (req, res, next) => {
   if(message) {
     console.warn(message);
     const err = new Error('Access Denied');
-    err.status = 401;
+    err.status = 403;
     next(err);
   } else {
     //User authenticated
@@ -119,7 +119,7 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
 
 //POST/api/courses 201 -  Creates a course, sets the Location header to the URI for the course, 
                           //and returns no content
-router.post('/courses', asyncHandler(async (req, res) => {
+router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
   // Model validations for User model
   const createCourse = await Course.create(req.body);
   res.location(`/api/courses/${createCourse.id}`);
