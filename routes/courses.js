@@ -12,7 +12,7 @@ const asyncHandler = cb => {
     try {
       await cb(req, res, next);
     } catch(err) {
-      console.log('Oops - There was an error with the App!');
+      console.log('Error 500 - Internal Server Error');
       next(err);
     }
   }

@@ -11,7 +11,7 @@ const asyncHandler = cb => {
     try {
       await cb(req, res, next);
     } catch(err) {
-      console.log('Oops - There was an error with the App!');
+      console.log('Error 500 - Internal Server Error');
       next(err);
     }
   }
@@ -62,7 +62,7 @@ const authenticateUser = async (req, res, next) => {
   if(message) {
     console.warn(message);
     const err = new Error('Access Denied');
-    err.status = 403;
+    err.status = 401;
     next(err);
   } else {
     //User authenticated
@@ -93,13 +93,14 @@ router.post('/users', asyncHandler(async (req, res) => {
       req.body.password = await bcryptjs.hashSync(req.body.password);
       // Model validations for User model
       await User.create(req.body);
+      res.location('/');
+      res.status(201).end();
     } else {
-      // Model validations for User model
-      await User.create(req.body);
+      // Respond with status 401
+      res.status(401).end();
     }
     // Set response location and status to 201 if successful
-    res.location('/');
-    res.status(201).end();
+    
   })
 );
   module.exports = router;
