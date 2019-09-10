@@ -1,4 +1,14 @@
-# Project-9
+# Rest Api
+- Received grade of "Exceeds Expectations"
+
+In this project, I used the Express web application framework and a SQL database to create a REST API that lets users create, list, update, and delete items from a school database. This app only runs on the server side - Testing of routes was done in conjunction with Postman. Used Sequelize ORM for data modeling, validation, and persistence. User log-in is authenticated with Basic-Auth and bcrypt hashed password.
+
+To run this app:  Run npm install in the terminal, then npm run seed, then npm start
+
+
+
+
+
 
 # Full Stack JavaScript Techdegree v2 - REST API Project
 
