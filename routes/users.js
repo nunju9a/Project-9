@@ -11,8 +11,16 @@ const asyncHandler = cb => {
     try {
       await cb(req, res, next);
     } catch(err) {
-      console.log('Error 500 - Internal Server Error');
-      next(err);
+      if (err.message === "E-mail is already associated with another user") { 
+        console.log('Validation error')
+        res.status(400).json({
+          message: err.message,
+          error: {},
+        });
+      } else{
+          console.log('Error 500 - Internal Server Error');
+          next(err);
+        }
     }
   }
 }
@@ -87,8 +95,8 @@ router.get('/users', authenticateUser, asyncHandler(async (req, res) => {
 
 //POST/api/users 201 - Creates a user, sets the Location header to "/", and returns no content
 router.post('/users', asyncHandler(async (req, res) => {
-    //If there is a password
-    if(req.body.password) {
+    //If all the required fiels are filled out...
+    if(req.body.password && req.body.firstName && req.body.lastName && req.body.emailAddress) {
       //Hash the password and then attempt to create a new user
       req.body.password = await bcryptjs.hashSync(req.body.password);
       // Model validations for User model
@@ -96,11 +104,11 @@ router.post('/users', asyncHandler(async (req, res) => {
       res.location('/');
       res.status(201).end();
     } else {
-      // Respond with status 401
-      res.status(401).end();
+      // Respond with status 400
+      res.status(400).json({
+        message: "Bad Request Error"
+      })
     }
-    // Set response location and status to 201 if successful
-    
   })
 );
   module.exports = router;

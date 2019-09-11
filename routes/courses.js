@@ -63,7 +63,7 @@ const authenticateUser = async (req, res, next) => {
   if(message) {
     console.warn(message);
     const err = new Error('Access Denied');
-    err.status = 403;
+    err.status = 401;
     next(err);
   } else {
     //User authenticated
@@ -121,9 +121,15 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
                           //and returns no content
 router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
   // Model validations for User model
-  const createCourse = await Course.create(req.body);
-  res.location(`/api/courses/${createCourse.id}`);
-  res.status(201).end();
+  if (req.body.title && req.body.description) { 
+    const createCourse = await Course.create(req.body);
+    res.location(`/api/courses/${createCourse.id}`);
+    res.status(201).end();
+  } else{
+    res.status(400).json({
+      message: "Bad Request Error"
+    })
+  }
 })
 );
 
@@ -132,13 +138,19 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res, next)
   let course = await Course.findByPk(req.params.id);
   // Checking if the user is the owner of the course
   if(course.userId === req.body.userId) {
-    course.title = req.body.title;
-    course.description = req.body.description;
-    course.estimatedTime = req.body.estimatedTime;
-    course.materialsNeeded = req.body.materialsNeeded;
-    //Course model validations 
-    course = await course.update(req.body);
-    res.status(204).end();
+    if (req.body.title && req.body.description) {
+      course.title = req.body.title;
+      course.description = req.body.description;
+      course.estimatedTime = req.body.estimatedTime;
+      course.materialsNeeded = req.body.materialsNeeded;
+      //Course model validations 
+      course = await course.update(req.body);
+      res.status(204).end();
+    } else{
+        res.status(400).json({
+        message: "Bad Request Error"
+        })
+      }
   } else {
     // Forbidden from updated course
     const err = new Error(`Forbidden - You don't have permission to do this`);
